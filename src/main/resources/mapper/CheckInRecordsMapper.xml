@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.liuqiao.nextTop.mapper.CheckInRecordsMapper">
+
+    <resultMap id="BaseResultMap" type="top.liuqiao.nextTop.model.entity.CheckInRecords">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="checkInTime" column="check_in_time" jdbcType="TIMESTAMP"/>
+            <result property="studyTime" column="study_time" jdbcType="INTEGER"/>
+            <result property="studyRecord" column="study_record" jdbcType="VARCHAR"/>
+            <result property="resumeSubmissions" column="resume_submissions" jdbcType="INTEGER"/>
+            <result property="interviewRecord" column="interview_record" jdbcType="TINYINT"/>
+            <result property="interviewDetails" column="interview_details" jdbcType="VARCHAR"/>
+            <result property="offer" column="offer" jdbcType="TINYINT"/>
+            <result property="offerDetails" column="offer_details" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,check_in_time,
+        study_time,study_record,resume_submissions,
+        interview_record,interview_details,offer,
+        offer_details
+    </sql>
+</mapper>
