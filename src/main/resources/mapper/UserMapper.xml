@@ -21,4 +21,14 @@
         password,avatar_url,total_days,
         consecutive_days,last_check_in_time,check_in_history
     </sql>
+    <insert id="addUser">
+        insert into t_user (id, username, account, password, avatar_url)
+        values (#{user.id}, #{user.username}, #{user.account},
+                #{user.password}, #{user.avatarUrl})
+    </insert>
+    <select id="selectByAccount" resultType="top.liuqiao.nextTop.model.entity.User">
+        select id, password
+        from t_user
+        where account = #{account}
+    </select>
 </mapper>
