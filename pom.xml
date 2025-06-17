@@ -116,7 +116,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>top.liuqiao.nextTop.NextTopApplication</mainClass>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
