@@ -15,3 +15,24 @@ spring:
         file-extension: yaml
         username: x-nexus
         password: x-nexus
+
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /doc
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: top.liuqiao.nextTop.controller # 替换为你的控制器包路径
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn # 设置中文界面
