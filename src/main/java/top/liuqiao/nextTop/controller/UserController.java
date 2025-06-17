@@ -1,15 +1,14 @@
 package top.liuqiao.nextTop.controller;
 
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.liuqiao.nextTop.common.BaseResponse;
 import top.liuqiao.nextTop.common.ResultUtils;
 import top.liuqiao.nextTop.model.request.UserLoginRequest;
 import top.liuqiao.nextTop.model.request.UserRegisterRequest;
+import top.liuqiao.nextTop.model.vo.UserVo;
 import top.liuqiao.nextTop.service.UserService;
 
 /**
@@ -31,6 +30,11 @@ public class UserController {
     @PostMapping("/register")
     public BaseResponse<Boolean> register(@RequestBody @Validated UserRegisterRequest userRegisterRequest) {
         return ResultUtils.success(userService.register(userRegisterRequest));
+    }
+
+    @GetMapping("/get/{id}")
+    public BaseResponse<UserVo> getVo(@PathVariable("id") @Min(1) Long id) {
+        return ResultUtils.success(userService.getVo(id));
     }
 
 }

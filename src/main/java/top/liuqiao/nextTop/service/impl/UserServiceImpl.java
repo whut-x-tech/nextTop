@@ -1,5 +1,6 @@
 package top.liuqiao.nextTop.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import top.liuqiao.nextTop.mapper.UserMapper;
 import top.liuqiao.nextTop.model.entity.User;
 import top.liuqiao.nextTop.model.request.UserLoginRequest;
 import top.liuqiao.nextTop.model.request.UserRegisterRequest;
+import top.liuqiao.nextTop.model.vo.UserVo;
 import top.liuqiao.nextTop.service.UserService;
 
 /**
@@ -58,5 +60,12 @@ public class UserServiceImpl implements UserService {
         ThrowUtils.throwIf(row == 0, ErrorCode.PARAMS_ERROR, "用户已经注册");
 
         return Boolean.TRUE;
+    }
+
+    @Override
+    public UserVo getVo(Long id) {
+        User user = userMapper.getUserVoById(id);
+        ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "用户不存在");
+        return BeanUtil.copyProperties(user, UserVo.class);
     }
 }
