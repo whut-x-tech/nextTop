@@ -31,4 +31,13 @@
         from t_user
         where account = #{account}
     </select>
+
+    <update id="updateUserChecKHistoryConsecutiveDaysTotalDaysById" parameterType="top.liuqiao.nextTop.model.entity.User">
+        UPDATE t_user
+        set check_in_history   = #{checkInHistory},
+            consecutive_days   = #{consecutiveDays},
+            total_days         = #{totalDays},
+            last_check_in_time = #{lastCheckInTime}
+        WHERE id = #{id}
+    </update>
 </mapper>

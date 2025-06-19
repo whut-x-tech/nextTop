@@ -23,4 +23,26 @@
         interview_record,interview_details,offer,
         offer_details
     </sql>
+    <insert id="insert" parameterType="top.liuqiao.nextTop.model.entity.CheckInRecords">
+        INSERT INTO t_check_in_records (id,
+                                        user_id,
+                                        check_in_time,
+                                        study_time,
+                                        study_record,
+                                        resume_submissions,
+                                        interview_record,
+                                        interview_details,
+                                        offer,
+                                        offer_details)
+        VALUES (#{id},
+                #{userId},
+                #{checkInTime},
+                #{studyTime},
+                #{studyRecord},
+                #{resumeSubmissions},
+                #{interviewRecord},
+                #{interviewDetails},
+                #{offer},
+                #{offerDetails})
+    </insert>
 </mapper>

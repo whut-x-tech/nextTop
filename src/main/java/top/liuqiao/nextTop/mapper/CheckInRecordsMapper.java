@@ -1,5 +1,7 @@
 package top.liuqiao.nextTop.mapper;
 
+import top.liuqiao.nextTop.model.entity.CheckInRecords;
+
 /**
 * @author laowang
 * @description 针对表【t_check_in_records】的数据库操作Mapper
@@ -8,6 +10,7 @@ package top.liuqiao.nextTop.mapper;
 */
 public interface CheckInRecordsMapper {
 
+    void insert(CheckInRecords checkInRecords);
 }
 
 

@@ -16,9 +16,12 @@ public interface UserMapper {
 
     int addUser(@Param("user") User user);
 
-    @Select("select username, avatar_url, total_days, consecutive_days," +
+    @Select("select id, username, avatar_url, total_days, consecutive_days," +
             " last_check_in_time, check_in_history from t_user where  id = #{id}")
     User getUserVoById(@Param("id") Long id);
+
+
+    void updateUserChecKHistoryConsecutiveDaysTotalDaysById(User user);
 }
 
 
