@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import lombok.AllArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import top.liuqiao.nextTop.common.ErrorCode;
@@ -18,7 +19,6 @@ import top.liuqiao.nextTop.service.CheckInRecordService;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -37,6 +37,8 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
     private final TransactionTemplate transactionTemplate;
 
     private final RedissonClient redissonClient;
+
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public void checkIn(CheckInRequest checkInRequest) {
@@ -66,8 +68,9 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
             user.setCheckInHistory(""); // todo 历史记录暂时不处理
 
             // difference
-            LocalDate nowDate = LocalDateTime.now().toLocalDate();
-            if (lastCheckInTime.isBefore(nowDate)) {
+            LocalDate nowDate = LocalDate.now();
+            boolean firstTimeToday = lastCheckInTime.isBefore(nowDate);
+            if (firstTimeToday) {
                 // check at different day
                 if (lastCheckInTime.plusDays(1).isEqual(nowDate)) {
                     // succession check in
@@ -78,13 +81,30 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
                 user.setTotalDays(user.getTotalDays() + 1);
             }
 
+
+            String key = userId + ":" + nowDate.getYear() + ":" + nowDate.getMonthValue();
             transactionTemplate.execute(s -> {
                 Object head = s.createSavepoint();
                 try {
                     userMapper.updateUserChecKHistoryConsecutiveDaysTotalDaysById(user);
                     checkInRecordsMapper.insert(checkInRecords);
+
+                    if (firstTimeToday) {
+                        // 存储用户签到信息
+                        redisTemplate.opsForValue()
+                                .setBit(key, nowDate.getDayOfMonth(), true);
+                    }
+
                 } catch (Exception e) {
                     s.rollbackToSavepoint(head);
+
+
+                    if (firstTimeToday) {
+                        // 回滚操作
+                        redisTemplate.opsForValue()
+                                .setBit(key, nowDate.getDayOfMonth(), false);
+                    }
+
                     throw new RuntimeException(e);
                 }
                 return null;
