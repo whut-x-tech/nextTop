@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import top.liuqiao.nextTop.model.entity.User;
 
+import java.util.List;
+
 /**
  * @author laowang
  * @description 针对表【t_user】的数据库操作Mapper
@@ -22,6 +24,14 @@ public interface UserMapper {
 
 
     void updateUserChecKHistoryConsecutiveDaysTotalDaysById(User user);
+
+    @Select("select id, total_days, username from t_user order by total_days limit 20")
+    List<User> getTotalDayRank();
+
+    @Select("select id, consecutive_days, username from t_user " +
+            "where last_check_in_time > #{yesterday} " +
+            "order by consecutive_days desc limit 20")
+    List<User> getConsecutiveDaysRank(@Param("yesterday") String yesterday);
 }
 
 

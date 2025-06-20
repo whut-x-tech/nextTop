@@ -11,8 +11,14 @@ import top.liuqiao.nextTop.mapper.UserMapper;
 import top.liuqiao.nextTop.model.entity.User;
 import top.liuqiao.nextTop.model.request.UserLoginRequest;
 import top.liuqiao.nextTop.model.request.UserRegisterRequest;
+import top.liuqiao.nextTop.model.vo.CheckInConsecutiveDaysRankUserVo;
+import top.liuqiao.nextTop.model.vo.CheckInTotalDaysRankUserVo;
 import top.liuqiao.nextTop.model.vo.UserVo;
 import top.liuqiao.nextTop.service.UserService;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author liuqiao
@@ -67,5 +73,29 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.getUserVoById(id);
         ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "用户不存在");
         return BeanUtil.copyProperties(user, UserVo.class);
+    }
+
+    @Override
+    public List<CheckInTotalDaysRankUserVo> getTotalDayRank() {
+        List<User> userList = userMapper.getTotalDayRank();
+        return userList
+                .stream()
+                .map(s -> BeanUtil.copyProperties(s, CheckInTotalDaysRankUserVo.class))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<CheckInConsecutiveDaysRankUserVo> getConsecutiveDaysRank() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime yesterday = LocalDateTime
+                .of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                        0, 0, 0, 0).minusDays(1);
+
+        List<User> userList = userMapper.getConsecutiveDaysRank(yesterday.toString());
+        return userList
+                .stream()
+                .map(s -> BeanUtil.copyProperties(s, CheckInConsecutiveDaysRankUserVo.class))
+                .collect(Collectors.toList());
     }
 }
