@@ -9,7 +9,7 @@ CREATE TABLE t_user
     consecutive_days   INT DEFAULT 0,        -- 连续打卡天数
     last_check_in_time timestamp,            -- 上次打卡时间
     check_in_history   TEXT ,                 -- 历史打卡记录（JSON格式存储）
-    index(account),
+    unique index(account),
     index(total_days),
     index(last_check_in_time, consecutive_days)
 );

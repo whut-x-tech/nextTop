@@ -63,7 +63,8 @@ public class UserServiceImpl implements UserService {
 
         // 唯一索引确保用户注册情况
         int row = userMapper.addUser(user);
-        ThrowUtils.throwIf(row == 0, ErrorCode.PARAMS_ERROR, "用户已经注册");
+        ThrowUtils.throwIf(row == 0,
+                ErrorCode.PARAMS_ERROR, "用户已经注册"); // 配合 unique index 实现去重
 
         return Boolean.TRUE;
     }
