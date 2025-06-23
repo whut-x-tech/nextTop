@@ -22,9 +22,9 @@
         consecutive_days,last_check_in_time,check_in_history
     </sql>
     <insert id="addUser">
-        insert into t_user (id, username, account, password, avatar_url)
+        insert into t_user (id, username, account, password, avatar_url, last_check_in_time)
         values (#{user.id}, #{user.username}, #{user.account},
-                #{user.password}, #{user.avatarUrl})
+                #{user.password}, #{user.avatarUrl}, #{user.lastCheckInTime})
     </insert>
     <select id="selectByAccount" resultType="top.liuqiao.nextTop.model.entity.User">
         select id, password

@@ -4,8 +4,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.liuqiao.nextTop.common.ErrorCode;
+import top.liuqiao.nextTop.exception.BusinessException;
 import top.liuqiao.nextTop.exception.ThrowUtils;
 import top.liuqiao.nextTop.mapper.UserMapper;
 import top.liuqiao.nextTop.model.entity.User;
@@ -16,7 +20,11 @@ import top.liuqiao.nextTop.model.vo.CheckInTotalDaysRankUserVo;
 import top.liuqiao.nextTop.model.vo.UserVo;
 import top.liuqiao.nextTop.service.UserService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +37,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public Long login(UserLoginRequest userLoginRequest) {
@@ -60,6 +70,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(SecureUtil.md5(password));
         user.setUsername(username);
         user.setAvatarUrl(avatarUrl);
+        user.setLastCheckInTime(Date.from(Instant.ofEpochMilli(System.currentTimeMillis() - 86400000)));
 
         // 唯一索引确保用户注册情况
         int row = userMapper.addUser(user);
