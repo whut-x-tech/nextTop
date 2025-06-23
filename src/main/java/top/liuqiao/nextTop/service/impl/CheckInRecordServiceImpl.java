@@ -82,7 +82,7 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
             }
 
 
-            String key = userId + ":" + nowDate.getYear() + ":" + nowDate.getMonthValue();
+            String key = "checkIn:" + userId + ":" + nowDate.getYear() + ":" + nowDate.getMonthValue();
             transactionTemplate.execute(s -> {
                 Object head = s.createSavepoint();
                 try {

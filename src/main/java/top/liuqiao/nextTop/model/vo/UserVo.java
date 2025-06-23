@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author liuqiao
@@ -42,7 +43,7 @@ public class UserVo implements Serializable {
     /**
      *
      */
-    private String checkInHistory;
+    private Map<String, String> checkInHistory;
 
 
     private final static long serialVersionUID = -1;

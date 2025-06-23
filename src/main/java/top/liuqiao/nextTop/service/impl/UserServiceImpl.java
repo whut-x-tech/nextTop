@@ -84,7 +84,35 @@ public class UserServiceImpl implements UserService {
     public UserVo getVo(Long id) {
         User user = userMapper.getUserVoById(id);
         ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "用户不存在");
-        return BeanUtil.copyProperties(user, UserVo.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        Cursor<String> scan = null;
+        try {
+            scan = redisTemplate
+                    .scan(ScanOptions.scanOptions()
+                            .match("checkIn:" + user.getId() + ":*")
+                            .count(100)
+                            .build());
+            List<String> idList = new ArrayList<>();
+            while (scan.hasNext()) {
+                scan.forEachRemaining(idList::add);
+                List<String> checkList = redisTemplate.opsForValue().multiGet(idList);
+                idList = idList.stream().map(s -> s.substring(28)).collect(Collectors.toList());
+                for (int i = 0; i < checkList.size(); i++) {
+                    map.put(idList.get(i), checkList.get(i));
+                }
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "redis 错误");
+        } finally {
+            assert scan != null;
+            scan.close();
+        }
+
+
+        UserVo userVo = BeanUtil.copyProperties(user, UserVo.class, "checkInHistory");
+        userVo.setCheckInHistory(map);
+        return userVo;
     }
 
     @Override
