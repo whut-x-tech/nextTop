@@ -31,6 +31,9 @@
         from t_user
         where account = #{account}
     </select>
+    <select id="selectAll" resultType="top.liuqiao.nextTop.model.entity.User">
+        select * from t_user
+    </select>
 
     <update id="updateUserChecKHistoryConsecutiveDaysTotalDaysById" parameterType="top.liuqiao.nextTop.model.entity.User">
         UPDATE t_user

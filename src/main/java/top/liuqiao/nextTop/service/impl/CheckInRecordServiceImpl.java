@@ -16,13 +16,16 @@ import top.liuqiao.nextTop.mapper.UserMapper;
 import top.liuqiao.nextTop.model.entity.CheckInRecords;
 import top.liuqiao.nextTop.model.entity.User;
 import top.liuqiao.nextTop.model.request.CheckInRequest;
+import top.liuqiao.nextTop.model.response.CheckInResponse;
 import top.liuqiao.nextTop.service.CheckInRecordService;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -138,7 +141,14 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
         if (CollectionUtils.isEmpty(checkInRecordsIds)) {
             return null;
         }
-        List<CheckInRecords> checkInRecords = checkInRecordsMapper.selectByIds(checkInRecordsIds);
+        System.out.println("===getRecommendations");
+        checkInRecordsIds.stream().forEach(System.out::println);
+        List<CheckInRecords> checkInRecords = new ArrayList<>();
+        for (Long id : checkInRecordsIds) {
+            checkInRecords.add(checkInRecordsMapper.selectById(id));
+        }
+        System.out.println("===checkInRecords");
+        checkInRecords.stream().forEach(System.out::println);
         if (CollectionUtils.isEmpty(checkInRecords)) {
             return null;
         }
@@ -152,6 +162,8 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
      */
     @Override
     public boolean putRecommendations(Long id) {
+        System.out.println("===putRecommendations");
+        System.out.println(id);
         String key = "checkInRecords";
         try {
             redisTemplate.opsForList().leftPush(key, id.toString());
@@ -168,5 +180,37 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
     @Override
     public List<CheckInRecords> getAllRecords() {
         return checkInRecordsMapper.selectAll();
+    }
+
+    @Override
+    public List<CheckInResponse> getAll4backend() {
+        List<User> users = userMapper.selectAll();
+        if (CollectionUtils.isEmpty(users)) {
+            return null;
+        }
+        Map<Long,String> userMap = users.stream()
+                .collect(Collectors.toMap(User::getId, User::getAccount));
+        List<CheckInRecords> checkInRecords = checkInRecordsMapper.selectAll();
+        if (CollectionUtils.isEmpty(checkInRecords)) {
+            return null;
+        }
+        List<CheckInResponse> checkInResponses = new ArrayList<>();
+        for (CheckInRecords record : checkInRecords) {
+            checkInResponses.add(
+                    CheckInResponse.builder()
+                            .id(String.valueOf(record.getId()))
+                            .userAccount(userMap.get(record.getUserId()))
+                            .checkInTime(record.getCheckInTime())
+                            .studyTime(record.getStudyTime())
+                            .studyRecord(record.getStudyRecord())
+                            .resumeSubmissions(record.getResumeSubmissions())
+                            .interviewRecord(record.getInterviewRecord())
+                            .interviewDetails(record.getInterviewDetails())
+                            .offer(record.getOffer())
+                            .offerDetails(record.getOfferDetails())
+                            .build()
+            );
+        }
+        return checkInResponses;
     }
 }

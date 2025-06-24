@@ -17,7 +17,7 @@ public interface CheckInRecordsMapper {
 
     List<CheckInRecords> selectByUserId(Long userId);
 
-    List<CheckInRecords> selectById(Long id);
+    CheckInRecords selectById(Long id);
     List<CheckInRecords> selectByIds(@Param("ids") List<Long> ids);
 
 

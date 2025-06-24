@@ -15,6 +15,11 @@ spring:
         file-extension: yaml
         username: x-nexus
         password: x-nexus
+  mvc:
+    static-path-pattern: /**
+    web:
+      resources:
+        static-locations: classpath:/static/
 
 
 

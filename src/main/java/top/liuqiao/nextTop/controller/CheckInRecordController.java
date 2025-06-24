@@ -8,6 +8,7 @@ import top.liuqiao.nextTop.common.BaseResponse;
 import top.liuqiao.nextTop.common.ResultUtils;
 import top.liuqiao.nextTop.model.entity.CheckInRecords;
 import top.liuqiao.nextTop.model.request.CheckInRequest;
+import top.liuqiao.nextTop.model.response.CheckInResponse;
 import top.liuqiao.nextTop.model.vo.CheckInConsecutiveDaysRankUserVo;
 import top.liuqiao.nextTop.model.vo.CheckInTotalDaysRankUserVo;
 import top.liuqiao.nextTop.service.CheckInRecordService;
@@ -56,6 +57,7 @@ public class CheckInRecordController {
 
     @PostMapping("/putRecommendations")
     public BaseResponse<Void> putRecommendations(@RequestParam("id") Long id) {
+        System.out.println("=== put: " + id + " ===");
         boolean isSuccess = checkInRecordService.putRecommendations(id);
         if(isSuccess){
             return ResultUtils.success(null);
@@ -74,5 +76,14 @@ public class CheckInRecordController {
             return ResultUtils.error(400, "暂无记录");
         }
         return ResultUtils.success(checkInRecords);
+    }
+
+    @GetMapping("/getAll4backend")
+    public BaseResponse<List<CheckInResponse>> getAll4backend() {
+        List<CheckInResponse> checkInResponses = checkInRecordService.getAll4backend();
+        if (CollectionUtils.isEmpty(checkInResponses)) {
+            return ResultUtils.error(400, "暂无记录");
+        }
+        return ResultUtils.success(checkInResponses);
     }
 }

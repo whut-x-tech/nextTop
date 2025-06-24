@@ -32,6 +32,8 @@ public interface UserMapper {
             "where last_check_in_time > #{yesterday} " +
             "order by consecutive_days desc limit 20")
     List<User> getConsecutiveDaysRank(@Param("yesterday") String yesterday);
+
+    List<User> selectAll();
 }
 
 
