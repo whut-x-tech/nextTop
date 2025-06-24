@@ -1,6 +1,9 @@
 package top.liuqiao.nextTop.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import top.liuqiao.nextTop.model.entity.CheckInRecords;
+
+import java.util.List;
 
 /**
 * @author laowang
@@ -11,6 +14,13 @@ import top.liuqiao.nextTop.model.entity.CheckInRecords;
 public interface CheckInRecordsMapper {
 
     void insert(CheckInRecords checkInRecords);
+
+    List<CheckInRecords> selectByUserId(Long userId);
+
+    List<CheckInRecords> selectById(Long id);
+    List<CheckInRecords> selectByIds(@Param("ids") List<Long> ids);
+
+
 }
 
 

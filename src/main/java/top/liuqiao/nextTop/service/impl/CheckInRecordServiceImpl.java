@@ -8,6 +8,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.CollectionUtils;
 import top.liuqiao.nextTop.common.ErrorCode;
 import top.liuqiao.nextTop.exception.ThrowUtils;
 import top.liuqiao.nextTop.mapper.CheckInRecordsMapper;
@@ -21,6 +22,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * @author liuqiao
@@ -112,5 +116,45 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
         } finally {
             lock.unlock();
         }
+    }
+
+    /**
+     * 获取推荐记录
+     * @return
+     */
+    @Override
+    public List<CheckInRecords> getRecommendations() {
+        List<String> checkInRecordsIdsText = redisTemplate.opsForList().range("checkInRecords", 0, 10);
+        if (CollectionUtils.isEmpty(checkInRecordsIdsText)) {
+            return null;
+        }
+        List<Long> checkInRecordsIds = checkInRecordsIdsText.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(checkInRecordsIds)) {
+            return null;
+        }
+        List<CheckInRecords> checkInRecords = checkInRecordsMapper.selectByIds(checkInRecordsIds);
+        if (CollectionUtils.isEmpty(checkInRecords)) {
+            return null;
+        }
+        return checkInRecords;
+    }
+
+    /**
+     * 将签到记录放入推荐队列
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean putRecommendations(Long id) {
+        String key = "checkInRecords";
+        try {
+            redisTemplate.opsForList().leftPush(key, id.toString());
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

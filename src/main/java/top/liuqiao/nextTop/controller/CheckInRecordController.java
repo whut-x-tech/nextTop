@@ -1,13 +1,12 @@
 package top.liuqiao.nextTop.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.liuqiao.nextTop.common.BaseResponse;
 import top.liuqiao.nextTop.common.ResultUtils;
+import top.liuqiao.nextTop.model.entity.CheckInRecords;
 import top.liuqiao.nextTop.model.request.CheckInRequest;
 import top.liuqiao.nextTop.model.vo.CheckInConsecutiveDaysRankUserVo;
 import top.liuqiao.nextTop.model.vo.CheckInTotalDaysRankUserVo;
@@ -44,5 +43,23 @@ public class CheckInRecordController {
     @PostMapping("/consecutiveDaysRank")
     public BaseResponse<List<CheckInConsecutiveDaysRankUserVo>> getConsecutiveDaysRank() {
         return ResultUtils.success(userService.getConsecutiveDaysRank());
+    }
+
+    @GetMapping("/getRecommendations")
+    public BaseResponse<List<CheckInRecords>> getRecommendations() {
+        List<CheckInRecords> checkInRecords = checkInRecordService.getRecommendations();
+        if(CollectionUtils.isEmpty(checkInRecords)){
+            return ResultUtils.error(400,"暂无推荐");
+        }
+        return ResultUtils.success(checkInRecords);
+    }
+
+    @PostMapping("/putRecommendations")
+    public BaseResponse<Void> putRecommendations(@RequestParam("id") Long id) {
+        boolean isSuccess = checkInRecordService.putRecommendations(id);
+        if(isSuccess){
+            return ResultUtils.success(null);
+        }
+        return ResultUtils.error(400,"推荐失败");
     }
 }

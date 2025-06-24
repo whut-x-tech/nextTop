@@ -1,6 +1,9 @@
 package top.liuqiao.nextTop.service;
 
+import top.liuqiao.nextTop.model.entity.CheckInRecords;
 import top.liuqiao.nextTop.model.request.CheckInRequest;
+
+import java.util.List;
 
 /**
  * @author liuqiao
@@ -8,4 +11,8 @@ import top.liuqiao.nextTop.model.request.CheckInRequest;
  */
 public interface CheckInRecordService {
     void checkIn(CheckInRequest checkInRequest);
+
+    List<CheckInRecords> getRecommendations();
+
+    boolean putRecommendations(Long id);
 }
