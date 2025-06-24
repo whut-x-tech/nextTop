@@ -21,6 +21,9 @@ public interface CheckInRecordsMapper {
     List<CheckInRecords> selectByIds(@Param("ids") List<Long> ids);
 
 
+    List<CheckInRecords> selectAll();
+
+
 }
 
 

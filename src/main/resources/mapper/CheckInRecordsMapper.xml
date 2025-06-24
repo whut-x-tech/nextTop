@@ -66,4 +66,11 @@
                 #{id}
         </foreach>
     </select>
+<!--    按照时间降序-->
+    <select id="selectAll" resultType="top.liuqiao.nextTop.model.entity.CheckInRecords">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM t_check_in_records
+        ORDER BY check_in_time DESC
+    </select>
 </mapper>

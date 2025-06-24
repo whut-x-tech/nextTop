@@ -62,4 +62,17 @@ public class CheckInRecordController {
         }
         return ResultUtils.error(400,"推荐失败");
     }
+
+    /**
+     * 获取所有签到记录
+     * @return
+     */
+    @GetMapping("/getAllRec")
+    public BaseResponse getAll() {
+        List<CheckInRecords> checkInRecords = checkInRecordService.getAllRecords();
+        if (CollectionUtils.isEmpty(checkInRecords)) {
+            return ResultUtils.error(400, "暂无记录");
+        }
+        return ResultUtils.success(checkInRecords);
+    }
 }

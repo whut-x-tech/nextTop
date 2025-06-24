@@ -15,4 +15,6 @@ public interface CheckInRecordService {
     List<CheckInRecords> getRecommendations();
 
     boolean putRecommendations(Long id);
+
+    List<CheckInRecords> getAllRecords();
 }

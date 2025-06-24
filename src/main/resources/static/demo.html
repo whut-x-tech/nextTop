@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>每日打卡系统（模拟）</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.8.17/dist/css/layui.css">
+</head>
+<body class="layui-container">
+
+<h2 class="layui-text-center">📌 每日打卡系统</h2>
+
+<!-- 打卡区 -->
+<div class="layui-card">
+  <div class="layui-card-header">打卡操作</div>
+  <div class="layui-card-body">
+    <button class="layui-btn" id="checkinBtn">📤 上传资料打卡</button>
+    <input type="file" id="fileUpload" style="display: none;" />
+    <p id="status" class="layui-text"></p>
+  </div>
+</div>
+
+<!-- 排行榜 -->
+<div class="layui-card">
+  <div class="layui-card-header">🏆 排行榜（模拟数据）</div>
+  <div class="layui-card-body">
+    <table class="layui-table" id="rankingTable"></table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/layui@2.8.17/dist/layui.js"></script>
+<script>
+    layui.use(['table', 'layer'], function () {
+      const table = layui.table;
+      const layer = layui.layer;
+
+      // 模拟排行榜数据
+      let rankingData = [
+        { username: '清风', totalDays: 12, lastCheckin: '2025-06-23 10:32' },
+        { username: 'test', totalDays: 5, lastCheckin: '2025-06-22 08:50' },
+        { username: 'lucifer', totalDays: 3, lastCheckin: '2025-06-21 19:10' },
+        { username: 'lff624', totalDays: 1, lastCheckin: '2025-06-20 11:27' },
+        { username: '前端', totalDays: 1, lastCheckin: '2025-06-19 09:45' },
+      ];
+
+      // 渲染排行榜表格
+      function loadRanking() {
+        table.render({
+          elem: '#rankingTable',
+          cols: [[
+            { type: 'numbers', title: '排名', width: 80 },
+            { field: 'username', title: '用户名' },
+            { field: 'totalDays', title: '累计打卡天数' },
+            { field: 'lastCheckin', title: '最近打卡时间' }
+          ]],
+          data: rankingData,
+          page: false
+        });
+      }
+
+      loadRanking();
+
+      // 绑定上传按钮
+      document.getElementById('checkinBtn').addEventListener('click', () => {
+        document.getElementById('fileUpload').click();
+      });
+
+      document.getElementById('fileUpload').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        // 模拟上传和打卡逻辑
+        const now = new Date().toLocaleString();
+        layer.msg(`打卡成功！上传了文件：${file.name}`);
+        document.getElementById('status').innerText = `✅ 已打卡：${now}`;
+
+        // 将当前用户打卡信息加入排行榜（模拟）
+        rankingData.unshift({
+          username: '你自己',
+          totalDays: 1,
+          lastCheckin: now
+        });
+
+        // 重新加载排行榜
+        loadRanking();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -44,6 +44,10 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
 
     private final StringRedisTemplate redisTemplate;
 
+    /**
+     * 签到
+     * @param checkInRequest
+     */
     @Override
     public void checkIn(CheckInRequest checkInRequest) {
 
@@ -156,5 +160,13 @@ public class CheckInRecordServiceImpl implements CheckInRecordService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 获取全部记录
+     */
+    @Override
+    public List<CheckInRecords> getAllRecords() {
+        return checkInRecordsMapper.selectAll();
     }
 }
