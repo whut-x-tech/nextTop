@@ -22,6 +22,16 @@ spring:
         static-locations: classpath:/static/
 
 
+logging:
+  level:
+    com:
+      alibaba:
+        nacos:
+          client:
+            auth:
+              impl:
+                process:
+                  HttpLoginProcessor: off
 
 # springdoc-openapi项目配置
 springdoc:
